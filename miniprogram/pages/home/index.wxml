@@ -1,0 +1,105 @@
+<view class="home-page">
+  <loading-state wx:if="{{loading}}" />
+
+  <view wx:elif="{{error}}" class="home-page__error">
+    <text>{{error}}</text>
+    <button class="home-page__retry" bindtap="retry">重新加载</button>
+  </view>
+
+  <view wx:else>
+    <view class="home-greeting">
+      <text class="home-greeting__title">晚上好，{{home.session.nickname}}</text>
+      <text class="home-greeting__subtitle">坚持运动，让更好的自己出现</text>
+    </view>
+
+    <scroll-view class="home-page__scroll" scroll-y="true" enhanced="true" show-scrollbar="false">
+      <view class="home-page__content">
+        <view class="home-hero">
+          <image class="home-hero__image" src="/assets/images/figma-home-hero.jpg" mode="aspectFill" />
+          <text class="home-hero__title">今天也要</text>
+          <view class="home-hero__subtitle"><text>每一次打卡</text><text>都是更好的自己</text></view>
+          <button class="home-hero__action" bindtap="goCheckIn">
+            <image src="/assets/images/figma-home-checkin-button.png" mode="aspectFill" />
+            <text>立即打卡</text>
+            <text class="home-hero__arrow">›</text>
+          </button>
+        </view>
+
+        <view class="streak-card home-surface">
+          <view class="home-section-head streak-card__head">
+            <text class="home-section-head__title">本周连胜</text>
+            <view class="home-section-head__link"><text>坚持就是一种超能力</text><text>›</text></view>
+          </view>
+          <view class="streak-card__body">
+            <view class="streak-calendar">
+              <view wx:for="{{home.calendar}}" wx:key="key" class="streak-day">
+                <view class="streak-day__dot {{item.completed ? 'streak-day__dot--done' : ''}} {{item.isToday ? 'streak-day__dot--today' : ''}}">
+                  <text wx:if="{{item.completed}}">✓</text>
+                </view>
+                <text>{{item.label}}</text>
+              </view>
+            </view>
+            <view class="streak-card__total">
+              <text>{{home.stats.streakDays}}</text>
+              <view><text>天</text><text>继续加油！</text></view>
+            </view>
+          </view>
+        </view>
+
+        <view class="metrics-card home-surface">
+          <view class="metric-item" bindtap="goRanking">
+            <image class="metric-item__icon" src="/assets/icons/figma-home-stat-star.png" mode="aspectFit" />
+            <view><text>{{home.stats.weeklyScore}}</text><text>积分</text></view>
+            <text class="metric-item__arrow">›</text>
+          </view>
+          <view class="metric-item" bindtap="goRanking">
+            <image class="metric-item__icon" src="/assets/icons/figma-home-stat-fire.png" mode="aspectFit" />
+            <view><text>{{home.stats.weeklyCalories}}</text><text>卡路里</text></view>
+            <text class="metric-item__arrow">›</text>
+          </view>
+          <view class="metric-item metric-item--rank" bindtap="goRanking">
+            <view class="metric-item__rank-icon"><view></view><view></view><view></view></view>
+            <view><text>{{home.stats.rank}}</text><text>排名</text></view>
+            <text class="metric-item__arrow">›</text>
+          </view>
+        </view>
+
+        <view class="group-card home-surface">
+          <view class="home-section-head">
+            <text class="home-section-head__title">小组挑战</text>
+            <view class="home-section-head__link"><text>4人同行 · 更有动力</text><text>›</text></view>
+          </view>
+          <view class="member-list">
+            <view wx:for="{{showcaseMembers}}" wx:key="nickname" class="member-list__item">
+              <view class="member-list__avatar-wrap">
+                <image class="member-list__avatar" src="{{item.avatar}}" mode="aspectFill" />
+                <text wx:if="{{item.leader}}" class="member-list__leader">♛</text>
+              </view>
+              <text>{{item.nickname}}</text>
+              <text>{{item.streak}}天</text>
+            </view>
+          </view>
+        </view>
+
+        <view class="activity-card home-surface">
+          <view class="home-section-head">
+            <text class="home-section-head__title">最近动态</text>
+            <view class="home-section-head__link"><text>更多动态</text><text>›</text></view>
+          </view>
+          <view wx:for="{{displayActivities}}" wx:key="id" class="feed-item">
+            <image class="feed-item__avatar" src="{{item.avatar}}" mode="aspectFill" />
+            <view class="feed-item__copy">
+              <view><text>{{item.user.nickname}}</text><text>完成了 {{item.sportLabel}}</text></view>
+              <text>{{item.createdAt}}</text>
+            </view>
+            <text class="feed-item__tag">{{item.encouragement}}</text>
+            <view class="feed-item__like"><text>♡</text><text>{{item.likes}}</text></view>
+          </view>
+          <empty-state wx:if="{{displayActivities.length === 0}}" title="还没有人打卡" description="完成第一次运动，给兄弟们打个样。" actionText="去打卡" bind:action="goCheckIn" />
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <bottom-tabbar active="{{activeTab}}" />
+</view>

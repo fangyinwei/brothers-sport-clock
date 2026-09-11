@@ -1,0 +1,30 @@
+<view class="profile-page">
+  <loading-state wx:if="{{loading}}" />
+  <block wx:else>
+    <view class="profile-hero">
+      <image class="profile-hero__background" src="/assets/images/figma-profile-hero.jpg" mode="scaleToFill" />
+      <view class="profile-hero__navigation"><text>我的</text></view>
+      <view class="profile-hero__identity">
+        <image class="profile-hero__avatar" src="{{session.user.avatar}}" mode="aspectFill" />
+        <view class="profile-hero__identity-copy"><text class="profile-hero__name">{{session.user.nickname}}</text><text class="profile-hero__motto">运动让生活更好</text></view>
+      </view>
+      <view class="profile-hero__slogan"><text>坚持的每一步</text><text>都是更好的自己</text></view>
+      <button class="profile-hero__edit" bindtap="editProfile">编辑资料 <text>›</text></button>
+    </view>
+    <view class="profile-content">
+      <view class="profile-card profile-stats">
+        <view class="profile-section-head"><text class="profile-section-title">本周数据</text><text class="profile-section-link" bindtap="showDetails">查看详情 <text class="profile-chevron">›</text></text></view>
+        <view class="profile-stats__grid"><view wx:for="{{weekStats}}" wx:key="label" class="profile-stats__item"><image class="profile-stats__icon" src="{{item.icon}}" mode="aspectFit" /><text class="profile-stats__value">{{item.value}}</text><text class="profile-stats__label">{{item.label}}</text></view></view>
+      </view>
+      <view class="profile-card profile-achievements">
+        <view class="profile-section-head"><text class="profile-section-title">我的成就</text><text class="profile-section-link">查看全部 <text class="profile-chevron">›</text></text></view>
+        <view class="profile-achievements__grid"><view wx:for="{{badges}}" wx:key="title" class="profile-achievements__item"><image class="profile-achievements__icon" src="{{item.image}}" mode="aspectFit" /><text class="profile-achievements__title">{{item.title}}</text><text class="profile-achievements__description">{{item.description}}</text></view></view>
+      </view>
+      <view class="profile-card profile-history">
+        <view class="profile-section-head"><text class="profile-section-title">历史打卡</text><text class="profile-section-link">查看全部 <text class="profile-chevron">›</text></text></view>
+        <view wx:for="{{recentCheckins}}" wx:key="id" class="profile-history__item" bindtap="goCheckIn"><image class="profile-history__image" src="{{item.image}}" mode="aspectFill" /><view class="profile-history__copy"><text class="profile-history__title">{{item.title}}</text><text class="profile-history__detail">{{item.detail}}</text></view><text class="profile-history__date">{{item.date}}</text><text class="profile-history__chevron">›</text></view>
+      </view>
+    </view>
+  </block>
+  <bottom-tabbar active="profile" />
+</view>

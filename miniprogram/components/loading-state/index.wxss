@@ -1,0 +1,18 @@
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  padding: 100rpx 0;
+}
+
+.loading-state__dot {
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  background: var(--color-primary);
+  opacity: .35;
+}
+
+.loading-state__dot:nth-child(2) { opacity: .65; }
+.loading-state__dot:nth-child(3) { opacity: 1; }

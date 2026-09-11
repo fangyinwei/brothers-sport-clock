@@ -1,0 +1,76 @@
+.challenge-card {
+  padding: 28rpx;
+  border-radius: 20rpx;
+  color: #fff;
+  background: var(--color-primary-dark);
+  box-shadow: 0 18rpx 32rpx rgba(10, 21, 94, .22);
+}
+
+.challenge-card__top,
+.challenge-card__bottom {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.challenge-card__eyebrow,
+.challenge-card__title,
+.challenge-card__description,
+.challenge-card__bottom text {
+  display: block;
+}
+
+.challenge-card__eyebrow {
+  color: rgba(255,255,255,.62);
+  font-size: 22rpx;
+}
+
+.challenge-card__title {
+  margin-top: 8rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+}
+
+.challenge-card__arrow {
+  font-size: 50rpx;
+  font-weight: 200;
+  line-height: 48rpx;
+  opacity: .8;
+}
+
+.challenge-card__description {
+  margin-top: 18rpx;
+  color: rgba(255,255,255,.78);
+  font-size: 23rpx;
+  line-height: 34rpx;
+}
+
+.challenge-card__progress {
+  margin-top: 24rpx;
+}
+
+.challenge-card__track {
+  height: 10rpx;
+  overflow: hidden;
+  border-radius: 10rpx;
+  background: rgba(255,255,255,.18);
+}
+
+.challenge-card__bar {
+  height: 100%;
+  border-radius: inherit;
+  background: #fff;
+}
+
+.challenge-card__numbers {
+  display: block;
+  margin-top: 10rpx;
+  color: rgba(255,255,255,.84);
+  font-size: 22rpx;
+}
+
+.challenge-card__bottom {
+  margin-top: 24rpx;
+  color: rgba(255,255,255,.6);
+  font-size: 21rpx;
+}

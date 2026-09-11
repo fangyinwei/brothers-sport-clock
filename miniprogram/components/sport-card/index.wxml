@@ -1,0 +1,8 @@
+<view class="sport-card" bindtap="handleTap">
+  <image class="sport-card__image" src="{{image}}" mode="aspectFill" />
+  <view class="sport-card__overlay"></view>
+  <view class="sport-card__copy">
+    <text class="sport-card__title">{{title}}</text>
+    <text class="sport-card__subtitle">{{subtitle}}</text>
+  </view>
+</view>

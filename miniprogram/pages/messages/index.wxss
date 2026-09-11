@@ -1,0 +1,70 @@
+.messages-page {
+  min-height: 100vh;
+  padding-bottom: calc(136rpx + env(safe-area-inset-bottom));
+  color: #2c3448;
+  background: #f7f9fd;
+}
+
+.messages-page__content { padding: 22rpx 24rpx 34rpx; }
+
+.streak-banner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 466rpx;
+  overflow: hidden;
+  border-radius: 30rpx;
+  color: #fff;
+  text-align: left;
+  background: #0a1d3d;
+}
+
+.streak-banner__image,
+.streak-banner__shade { position: absolute; inset: 0; width: 100%; height: 100%; }
+.streak-banner__shade { background: linear-gradient(90deg, rgba(4, 17, 44, .88) 0%, rgba(4, 17, 44, .48) 45%, rgba(4, 17, 44, .05) 100%); }
+.streak-banner__copy { position: absolute; z-index: 1; top: 61rpx; left: 38rpx; display: flex; flex-direction: column; }
+.streak-banner__eyebrow { color: #79859d; font-size: 24rpx; line-height: 33rpx; }
+.streak-banner__title { margin-top: 18rpx; color: #e3e5e8; font-size: 54rpx; line-height: 61rpx; font-weight: 700; }
+.streak-banner__title--lime { color: #c1e460; }
+.streak-banner__title--sub { margin-top: 8rpx; }
+.streak-banner__description { margin-top: 20rpx; color: #868c9b; font-size: 22rpx; line-height: 33rpx; }
+.streak-banner__description--next { margin-top: 0; color: #8b92a0; }
+.streak-banner__cta { display: flex; align-items: center; justify-content: center; width: 196rpx; height: 68rpx; margin-top: 22rpx; border: 1rpx solid #c0de5f; border-radius: 34rpx; color: #25362e; background: #cff965; font-size: 25rpx; line-height: 1; }
+.streak-banner__arrow { margin-left: 20rpx; color: #25362e; font-size: 34rpx; font-weight: 700; line-height: 1; }
+.streak-banner__streak { position: absolute; z-index: 1; right: 35rpx; bottom: 29rpx; display: flex; align-items: center; justify-content: center; width: 161rpx; height: 120rpx; border: 1rpx solid #272f3e; border-radius: 25rpx; flex-direction: column; background: #1b2534; }
+.streak-banner__streak > text { color: #9ba0a9; font-size: 21rpx; line-height: 26rpx; }
+.streak-banner__streak > view { display: flex; align-items: center; height: 46rpx; margin-top: 6rpx; }
+.streak-banner__fire { position: relative; width: 27rpx; height: 35rpx; margin-right: 10rpx; overflow: hidden; border-radius: 22rpx 22rpx 19rpx 7rpx; background: #c1e460; transform: rotate(45deg); }
+.streak-banner__fire::after { position: absolute; right: 2rpx; bottom: -4rpx; width: 16rpx; height: 25rpx; border-radius: 16rpx 16rpx 14rpx 5rpx; background: #1b2534; content: ''; }
+.streak-banner__number { color: #dbdcdf; font-size: 47rpx; line-height: 47rpx; font-weight: 700; }
+.streak-banner__unit { align-self: flex-end; margin: 0 0 4rpx 7rpx; color: #b5bac2; font-size: 21rpx; line-height: 25rpx; }
+
+.quick-action-grid { display: flex; justify-content: space-between; margin: 24rpx 0 34rpx; }
+.quick-action { display: flex; align-items: center; width: calc((100% - 12rpx) / 4); min-width: 0; height: 98rpx; padding: 0 5rpx; border: 2rpx solid #f5f7fb; border-radius: 0; color: #333a4d; background: #fcfcfd; text-align: left; }
+.quick-action__icon { display: block; width: 36rpx; height: 36rpx; margin-right: 6rpx; flex-shrink: 0; }
+.quick-action view { display: flex; min-width: 0; flex-direction: column; }
+.quick-action__title { color: #3f475a; font-size: 22rpx; line-height: 25rpx; font-weight: 600; }
+.quick-action__subtitle { margin-top: 3rpx; overflow: hidden; color: #9ca3b2; font-size: 16rpx; line-height: 19rpx; text-overflow: ellipsis; white-space: nowrap; }
+
+.message-list { display: flex; gap: 20rpx; flex-direction: column; }
+.message-card { position: relative; display: flex; min-height: 194rpx; padding: 28rpx; border-radius: 30rpx; background: #fcfdff; box-shadow: 0 8rpx 24rpx rgba(36, 52, 81, .035); }
+.message-card--unread::before { position: absolute; top: 28rpx; left: 16rpx; width: 8rpx; height: 8rpx; border-radius: 50%; background: #cafa63; content: ''; }
+.message-card__avatar-wrap { position: relative; z-index: 1; flex: 0 0 auto; width: 120rpx; height: 120rpx; margin-right: 20rpx; }
+.message-card__avatar { width: 120rpx; height: 120rpx; border-radius: 50%; }
+.message-card__badge { position: absolute; right: -3rpx; bottom: -2rpx; display: flex; align-items: center; justify-content: center; width: 40rpx; height: 40rpx; border: 3rpx solid #fcfdff; border-radius: 50%; color: #17233e; background: #cafa63; font-size: 23rpx; }
+.message-card__copy { display: flex; min-width: 0; padding-right: 112rpx; flex: 1; flex-direction: column; }
+.message-card__topline { display: flex; align-items: center; justify-content: space-between; gap: 10rpx; }
+.message-card__title { overflow: hidden; color: #2c3448; font-size: 29rpx; line-height: 36rpx; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.message-card__time { position: absolute; top: 34rpx; right: 28rpx; color: #9098aa; font-size: 19rpx; }
+.message-card__content { display: block; margin-top: 7rpx; overflow: hidden; color: #81899d; font-size: 23rpx; line-height: 30rpx; text-overflow: ellipsis; white-space: nowrap; }
+.message-card__quote { display: block; margin-top: 8rpx; overflow: hidden; color: #8d95a6; font-size: 19rpx; line-height: 27rpx; text-overflow: ellipsis; white-space: nowrap; }
+.message-card__metric,
+.message-card__progress,
+.message-card__reply { position: absolute; right: 22rpx; bottom: 27rpx; display: flex; align-items: center; justify-content: center; height: 69rpx; border-radius: 22rpx; background: #f5f6fa; }
+.message-card__metric { width: 131rpx; gap: 7rpx; color: #444c5f; font-size: 25rpx; }
+.message-card__metric-icon { color: #a3df35; font-size: 24rpx; }
+.message-card__progress { width: 149rpx; height: 78rpx; flex-direction: column; }
+.message-card__progress text { color: #2b344a; font-size: 29rpx; font-weight: 700; line-height: 29rpx; }
+.message-card__progress-track { width: 112rpx; height: 13rpx; margin-top: 6rpx; overflow: hidden; border-radius: 20rpx; background: #e1e5ec; }
+.message-card__progress-track view { width: 60%; height: 100%; border-radius: inherit; background: #cafa63; }
+.message-card__reply { width: 144rpx; height: 62rpx; color: #37433f; background: #e4fbad; font-size: 22rpx; }

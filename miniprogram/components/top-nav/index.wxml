@@ -1,0 +1,11 @@
+<view class="top-nav {{dark ? 'top-nav--dark' : ''}} {{transparent ? 'top-nav--transparent' : ''}}">
+  <view class="top-nav__status"></view>
+  <view class="top-nav__bar {{alignLeft ? 'top-nav__bar--left' : ''}}">
+    <button wx:if="{{showBack}}" class="top-nav__back" aria-label="返回" bindtap="handleBack"><text class="iconfont"></text></button>
+    <view class="top-nav__copy">
+      <text class="top-nav__title {{largeTitle ? 'top-nav__title--large' : ''}}">{{title}}</text>
+      <text wx:if="{{subtitle}}" class="top-nav__subtitle">{{subtitle}}</text>
+    </view>
+    <button wx:if="{{showSearch}}" class="top-nav__search" aria-label="搜索" bindtap="handleSearch"><text class="iconfont"></text></button>
+  </view>
+</view>

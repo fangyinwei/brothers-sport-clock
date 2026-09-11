@@ -1,0 +1,24 @@
+<view class="launch-page {{leaving ? 'launch-page--leaving' : ''}}">
+  <image class="launch-page__background" src="/assets/images/launch-night-runner-v2.jpg" mode="aspectFill" />
+  <view class="launch-page__scrim"></view>
+  <view class="launch-page__glow"></view>
+
+  <view class="launch-page__brand">
+    <image class="launch-page__logo" src="/assets/icons/launch-logo.svg" mode="aspectFit" />
+    <view class="launch-page__brand-copy"><text class="launch-page__brand-name">BroFit</text><text class="launch-page__brand-subtitle">兄弟运动局</text></view>
+  </view>
+
+  <view class="launch-page__headline">
+    <text class="launch-page__eyebrow">MOVE WITH YOUR CREW</text>
+    <text class="launch-page__title">和兄弟一起</text>
+    <text class="launch-page__title launch-page__title--accent">把热爱跑成日常</text>
+    <view class="launch-page__rule"></view>
+    <text class="launch-page__description">记录每一次挥汗，也见证每一步向前。</text>
+  </view>
+
+  <view class="launch-page__footer">
+    <view class="launch-page__progress"><view class="launch-page__progress-fill"></view></view>
+    <view class="launch-page__footer-copy"><text>准备进入运动局</text><text class="launch-page__footer-dot">·</text><text>{{countdown}}</text></view>
+  </view>
+  <button class="launch-page__skip" bindtap="skip">跳过</button>
+</view>

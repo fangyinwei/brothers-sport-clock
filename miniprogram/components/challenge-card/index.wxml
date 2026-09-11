@@ -1,0 +1,20 @@
+<view class="challenge-card" bindtap="handleTap">
+  <view class="challenge-card__top">
+    <view>
+      <text class="challenge-card__eyebrow">本周挑战</text>
+      <text class="challenge-card__title">{{title}}</text>
+    </view>
+    <text class="challenge-card__arrow">›</text>
+  </view>
+  <text class="challenge-card__description">{{description}}</text>
+  <view class="challenge-card__progress">
+    <view class="challenge-card__track">
+      <view class="challenge-card__bar" style="width: {{current / target * 100}}%;"></view>
+    </view>
+    <text class="challenge-card__numbers">{{current}} / {{target}} {{unit}}</text>
+  </view>
+  <view class="challenge-card__bottom">
+    <text>奖励：{{reward}}</text>
+    <text>{{endsAt}}</text>
+  </view>
+</view>

@@ -1,0 +1,27 @@
+<view class="login-page">
+  <image class="login-page__background" src="/assets/images/figma-login-bg.jpg" mode="aspectFill" />
+  <view class="login-page__scrim"></view>
+
+  <view class="login-page__brand">
+    <image class="login-page__brand-mark" src="/assets/images/figma-login-logo.png" mode="aspectFit" />
+    <text class="login-page__slogan">一起练，才够意思</text>
+  </view>
+
+  <view class="login-page__bottom">
+    <button class="login-page__button" loading="{{loading}}" disabled="{{loading}}" bindtap="handleLogin">
+      <image src="/assets/icons/figma-wechat-login.png" mode="aspectFit" />
+      <text>微信登录</text>
+    </button>
+    <view class="login-page__cloud-status login-page__cloud-status--{{cloudStatus}}" aria-live="polite">
+      <text>{{cloudStatusText}}</text>
+    </view>
+  </view>
+
+  <view class="login-page__agreement" role="button" bindtap="toggleAgreement">
+    <view class="login-page__agreement-circle {{agreed ? 'login-page__agreement-circle--selected' : ''}}">
+      <text class="iconfont">{{agreed ? '' : ''}}</text>
+    </view>
+    <text>我已阅读并同意</text>
+    <text class="login-page__agreement-link">《用户协议》和《隐私政策》</text>
+  </view>
+</view>

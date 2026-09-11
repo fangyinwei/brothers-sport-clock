@@ -1,0 +1,18 @@
+<view class="bottom-tabbar">
+  <view class="bottom-tabbar__inner">
+    <view
+      wx:for="{{items}}"
+      wx:key="key"
+      class="bottom-tabbar__item {{item.selected ? 'bottom-tabbar__item--active' : ''}}"
+      data-key="{{item.key}}"
+      data-url="{{item.url}}"
+      bindtap="handleTap"
+    >
+      <view class="bottom-tabbar__icon-wrap {{item.selected ? 'bottom-tabbar__icon-wrap--selected' : ''}}">
+        <text class="iconfont bottom-tabbar__icon {{item.selected ? 'bottom-tabbar__icon--selected' : 'bottom-tabbar__icon--idle'}}">{{item.glyph}}</text>
+        <view wx:if="{{item.badge}}" class="bottom-tabbar__badge"></view>
+      </view>
+      <text class="bottom-tabbar__label">{{item.label}}</text>
+    </view>
+  </view>
+</view>

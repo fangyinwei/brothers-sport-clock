@@ -1,0 +1,6 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="375" height="83" viewBox="0 0 375 83" fill="none" xmlns="http://www.w3.org/2000/svg">
+<foreignObject x="-27.1828" y="-27.1828" width="429.366" height="137.366"><div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(13.59px);clip-path:url(#bgblur_0_0_111_clip_path);height:100%;width:100%"></div></foreignObject><path id="Background" data-figma-bg-blur-radius="27.1828" fill-rule="evenodd" clip-rule="evenodd" d="M0 0H375V83H0V0Z" fill="#F8F8F8" fill-opacity="0.92"/>
+<defs>
+<clipPath id="bgblur_0_0_111_clip_path" transform="translate(27.1828 27.1828)"><path fill-rule="evenodd" clip-rule="evenodd" d="M0 0H375V83H0V0Z"/>
+</clipPath></defs>
+</svg>

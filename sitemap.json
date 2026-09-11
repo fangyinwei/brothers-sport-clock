@@ -1,0 +1,9 @@
+{
+  "desc": "BroFit sitemap",
+  "rules": [
+    {
+      "action": "allow",
+      "page": "*"
+    }
+  ]
+}

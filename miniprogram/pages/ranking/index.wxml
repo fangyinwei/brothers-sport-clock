@@ -1,0 +1,24 @@
+<view class="ranking-page">
+  <top-nav title="排行榜" showBack="{{true}}" />
+  <view class="ranking-page__content">
+    <view class="ranking-page__intro">
+      <text class="ranking-page__eyebrow">BROFIT LEAGUE</text>
+      <text class="ranking-page__title">这周谁最稳？</text>
+      <text class="ranking-page__description">所有排名每周一 00:00 重置，历史成绩不会消失。</text>
+    </view>
+    <scroll-view class="ranking-tabs" scroll-x="{{true}}" show-scrollbar="{{false}}">
+      <view wx:for="{{types}}" wx:key="key" class="ranking-tabs__item {{activeType === item.key ? 'ranking-tabs__item--active' : ''}}" data-type="{{item.key}}" bindtap="switchType">{{item.label}}</view>
+    </scroll-view>
+
+    <loading-state wx:if="{{loading}}" />
+    <view wx:elif="{{error}}" class="ranking-page__error"><text>{{error}}</text><button bindtap="retry">重新加载</button></view>
+    <view wx:else>
+      <view class="ranking-heading">
+        <view><text class="ranking-heading__title">{{ranking.title}}</text><text class="ranking-heading__updated">{{ranking.updatedAt}}</text></view>
+        <text class="ranking-heading__unit">单位：{{ranking.unit}}</text>
+      </view>
+      <ranking-list entries="{{ranking.entries}}" bind:membertap="memberTap" />
+    </view>
+  </view>
+  <bottom-tabbar active="sport" />
+</view>

@@ -1,0 +1,47 @@
+<view class="messages-page">
+  <top-nav title="消息" alignLeft="{{true}}" largeTitle="{{true}}" />
+  <view class="messages-page__content">
+    <view class="streak-banner" bindtap="goCheckIn" role="button">
+      <image class="streak-banner__image" src="/assets/images/figma-messages-hero.jpg" mode="aspectFill" />
+      <view class="streak-banner__shade"></view>
+      <view class="streak-banner__copy">
+        <text class="streak-banner__eyebrow">一起变更好</text>
+        <text class="streak-banner__title streak-banner__title--lime">今天还没打卡</text>
+        <text class="streak-banner__title streak-banner__title--sub">别掉连胜</text>
+        <text class="streak-banner__description">坚持一下，</text>
+        <text class="streak-banner__description streak-banner__description--next">你比昨天更强</text>
+        <view class="streak-banner__cta"><text>去打卡</text><text class="streak-banner__arrow">→</text></view>
+      </view>
+      <view class="streak-banner__streak"><text>连续打卡</text><view><view class="streak-banner__fire"></view><text class="streak-banner__number">{{streakDays}}</text><text class="streak-banner__unit">天</text></view></view>
+    </view>
+
+    <view class="quick-action-grid">
+      <view wx:for="{{quickActions}}" wx:key="title" class="quick-action" data-template="{{item.template}}" bindtap="sendQuickNudge" role="button">
+        <image class="quick-action__icon" src="{{item.icon}}" mode="aspectFit" />
+        <view><text class="quick-action__title">{{item.title}}</text><text class="quick-action__subtitle">{{item.subtitle}}</text></view>
+      </view>
+    </view>
+
+    <loading-state wx:if="{{loading}}" />
+    <empty-state wx:elif="{{messages.length === 0}}" title="暂时没有新消息" description="去运动一下，消息马上就来。" actionText="去打卡" bind:action="goCheckIn" />
+    <view wx:else class="message-list">
+      <view wx:for="{{messages}}" wx:key="id" class="message-card {{item.read ? '' : 'message-card--unread'}}">
+        <view class="message-card__avatar-wrap">
+          <image class="message-card__avatar" src="{{item.avatar}}" mode="aspectFill" />
+          <text wx:if="{{item.visual === 'invite'}}" class="iconfont message-card__badge"></text>
+        </view>
+        <view class="message-card__copy">
+          <view class="message-card__topline"><text class="message-card__title">{{item.title}}</text><text class="message-card__time">{{item.timeLabel}}</text></view>
+          <text class="message-card__content">{{item.content}}</text>
+          <text wx:if="{{item.visual === 'rank'}}" class="message-card__quote">“别灰心，下次一定赢回来！”</text>
+          <text wx:elif="{{item.visual === 'challenge'}}" class="message-card__quote">“继续加油，本周目标近在眼前！”</text>
+          <text wx:else class="message-card__quote">“一个人可以跑很快，一起能跑更远！”</text>
+        </view>
+        <view wx:if="{{item.visual === 'rank'}}" class="message-card__metric"><text class="iconfont message-card__metric-icon"></text><text>1名</text></view>
+        <view wx:elif="{{item.visual === 'challenge'}}" class="message-card__progress"><text>3/5</text><view class="message-card__progress-track"><view></view></view></view>
+        <view wx:else class="message-card__reply" data-user-id="{{item.fromUserId}}" bindtap="respondToMessage" role="button">回应一下</view>
+      </view>
+    </view>
+  </view>
+  <bottom-tabbar active="messages" />
+</view>

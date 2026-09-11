@@ -1,0 +1,52 @@
+<view class="profile-edit-page">
+  <view class="profile-edit-hero">
+    <image class="profile-edit-hero__image" src="/assets/images/figma-edit-profile-hero.jpg" mode="aspectFill" />
+    <button class="profile-edit-hero__back" bindtap="goBack" aria-label="返回我的页面">
+      <image src="/assets/images/figma-edit-profile-back.png" mode="aspectFit" />
+    </button>
+    <view class="profile-edit-hero__copy">
+      <text class="profile-edit-hero__title">编辑资料</text>
+      <text class="profile-edit-hero__subtitle">让每一次坚持，更贴近现在的你</text>
+    </view>
+  </view>
+
+  <view class="profile-edit-sheet">
+    <view class="profile-edit-avatar">
+      <view class="profile-edit-avatar__mask">
+        <image class="profile-edit-avatar__image" src="{{avatar}}" mode="aspectFill" />
+      </view>
+      <button class="profile-edit-avatar__image-button" bindtap="chooseAvatar" aria-label="更换头像">
+      </button>
+      <button class="profile-edit-avatar__edit" bindtap="chooseAvatar" aria-label="更换头像">
+        <image src="/assets/images/figma-edit-profile-avatar-edit.png" mode="aspectFit" />
+      </button>
+    </view>
+
+    <view class="profile-edit-fields">
+      <view class="profile-edit-field profile-edit-field--nickname">
+        <text class="profile-edit-field__label">昵称</text>
+        <image class="profile-edit-field__divider" src="/assets/images/figma-edit-profile-divider-nickname.png" mode="scaleToFill" />
+        <input class="profile-edit-field__input" value="{{nickname}}" data-field="nickname" bindinput="handleInput" maxlength="12" placeholder="输入你的昵称" />
+      </view>
+
+      <view class="profile-edit-metrics">
+        <view class="profile-edit-field profile-edit-field--metric">
+          <text class="profile-edit-field__label">身高</text>
+          <image class="profile-edit-field__divider" src="/assets/images/figma-edit-profile-divider-height.png" mode="scaleToFill" />
+          <input class="profile-edit-field__input profile-edit-field__input--metric" type="number" value="{{height}}" data-field="height" bindinput="handleInput" />
+          <text class="profile-edit-field__unit">cm</text>
+        </view>
+        <view class="profile-edit-field profile-edit-field--metric">
+          <text class="profile-edit-field__label">体重</text>
+          <image class="profile-edit-field__divider" src="/assets/images/figma-edit-profile-divider-weight.png" mode="scaleToFill" />
+          <input class="profile-edit-field__input profile-edit-field__input--metric" type="digit" value="{{weight}}" data-field="weight" bindinput="handleInput" />
+          <text class="profile-edit-field__unit">kg</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="profile-edit-actions">
+    <button class="profile-edit-actions__save" loading="{{saving}}" bindtap="handleSubmit">保存资料</button>
+  </view>
+</view>

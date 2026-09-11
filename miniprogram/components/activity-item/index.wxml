@@ -1,0 +1,8 @@
+<view class="activity-item">
+  <image class="activity-item__avatar" src="{{activity.user.avatar}}" mode="aspectFill" />
+  <view class="activity-item__copy">
+    <text class="activity-item__title">{{activity.title}}</text>
+    <text class="activity-item__detail">{{activity.detail}} · {{activity.createdAt}}</text>
+  </view>
+  <view class="activity-item__score">+{{activity.score}}</view>
+</view>

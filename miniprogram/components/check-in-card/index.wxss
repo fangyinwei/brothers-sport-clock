@@ -1,0 +1,52 @@
+.check-in-card {
+  display: flex;
+  gap: 20rpx;
+  padding: 24rpx;
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.check-in-card__image {
+  width: 96rpx;
+  height: 96rpx;
+  flex-shrink: 0;
+  border-radius: 12rpx;
+}
+
+.check-in-card__main {
+  min-width: 0;
+  flex: 1;
+}
+
+.check-in-card__title-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.check-in-card__title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.check-in-card__score {
+  color: var(--color-primary);
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+.check-in-card__detail,
+.check-in-card__calories {
+  display: block;
+  margin-top: 10rpx;
+  color: var(--color-text-secondary);
+  font-size: 22rpx;
+}
+
+.check-in-card__calories {
+  color: var(--color-warning);
+}

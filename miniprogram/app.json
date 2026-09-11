@@ -1,0 +1,31 @@
+{
+  "pages": [
+    "pages/launch/index",
+    "pages/login/index",
+    "pages/profile-setup/index",
+    "pages/home/index",
+    "pages/check-in/index",
+    "pages/ranking/index",
+    "pages/messages/index",
+    "pages/profile/index"
+  ],
+  "window": {
+    "navigationStyle": "custom",
+    "backgroundColor": "#FFFFFF",
+    "backgroundTextStyle": "light",
+    "enablePullDownRefresh": false
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "usingComponents": {
+    "top-nav": "/components/top-nav/index",
+    "bottom-tabbar": "/components/bottom-tabbar/index",
+    "sport-card": "/components/sport-card/index",
+    "check-in-card": "/components/check-in-card/index",
+    "ranking-list": "/components/ranking-list/index",
+    "challenge-card": "/components/challenge-card/index",
+    "activity-item": "/components/activity-item/index",
+    "empty-state": "/components/empty-state/index",
+    "loading-state": "/components/loading-state/index"
+  }
+}

@@ -1,0 +1,5 @@
+<view class="loading-state" aria-label="正在加载">
+  <view class="loading-state__dot"></view>
+  <view class="loading-state__dot"></view>
+  <view class="loading-state__dot"></view>
+</view>

@@ -1,0 +1,42 @@
+.sport-card {
+  position: relative;
+  height: 168rpx;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  background: var(--color-primary-dark);
+}
+
+.sport-card__image,
+.sport-card__overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.sport-card__overlay {
+  background: rgba(10, 21, 94, .62);
+}
+
+.sport-card__copy {
+  position: absolute;
+  left: 32rpx;
+  bottom: 28rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+  color: #fff;
+}
+
+.sport-card__title {
+  font-size: 32rpx;
+  line-height: 44rpx;
+  font-weight: 600;
+}
+
+.sport-card__subtitle {
+  font-size: 22rpx;
+  line-height: 30rpx;
+  opacity: .82;
+}

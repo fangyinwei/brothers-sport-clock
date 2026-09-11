@@ -1,0 +1,50 @@
+@import './styles/tokens.wxss';
+@import './styles/mixins.wxss';
+
+/* Synced from https://at.alicdn.com/t/c/font_5232768_4sq7pgqtuc3.css */
+@font-face {
+  font-family: 'iconfont';
+  src: url('https://at.alicdn.com/t/c/font_5232768_4sq7pgqtuc3.woff2?t=1789093880328') format('woff2'),
+       url('https://at.alicdn.com/t/c/font_5232768_4sq7pgqtuc3.woff?t=1789093880328') format('woff');
+}
+
+.iconfont {
+  font-family: 'iconfont' !important;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+page {
+  min-height: 100%;
+  background: var(--color-background);
+  color: var(--color-text-primary);
+  font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 28rpx;
+  box-sizing: border-box;
+}
+
+view,
+scroll-view,
+button,
+input,
+textarea,
+image,
+text {
+  box-sizing: border-box;
+}
+
+button::after {
+  border: 0;
+}
+
+button {
+  margin: 0;
+  padding: 0;
+  line-height: 1.4;
+  background: transparent;
+}
+
+image {
+  display: block;
+}

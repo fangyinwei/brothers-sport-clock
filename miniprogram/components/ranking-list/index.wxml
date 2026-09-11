@@ -1,0 +1,19 @@
+<view class="ranking-list">
+  <view wx:for="{{entries}}" wx:key="rank" class="ranking-row {{item.highlighted ? 'ranking-row--highlighted' : ''}}" data-user="{{item.user}}" bindtap="handleTap">
+    <view class="ranking-row__rank ranking-row__rank--{{item.rank}}">{{item.rank}}</view>
+    <image class="ranking-row__avatar" src="{{item.user.avatar}}" mode="aspectFill" />
+    <view class="ranking-row__copy">
+      <view class="ranking-row__name-row">
+        <text class="ranking-row__name">{{item.user.nickname}}</text>
+        <text wx:if="{{item.highlighted}}" class="ranking-row__me">我</text>
+      </view>
+      <text class="ranking-row__detail">{{item.detail}}</text>
+    </view>
+    <view class="ranking-row__value">
+      <text class="ranking-row__number">{{item.value}}</text>
+      <text class="ranking-row__unit">{{item.unit}}</text>
+      <text wx:if="{{item.trend > 0}}" class="ranking-row__trend ranking-row__trend--up">↑{{item.trend}}</text>
+      <text wx:if="{{item.trend < 0}}" class="ranking-row__trend ranking-row__trend--down">↓{{-item.trend}}</text>
+    </view>
+  </view>
+</view>

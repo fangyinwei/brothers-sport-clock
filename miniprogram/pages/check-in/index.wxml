@@ -1,0 +1,84 @@
+<view class="checkin-page">
+  <view class="checkin-hero">
+    <image class="checkin-hero__image" src="/assets/images/figma-checkin-header.jpg" mode="aspectFill" />
+    <view class="checkin-hero__veil"></view>
+    <top-nav title="" dark="{{true}}" transparent="{{true}}" showBack="{{true}}" />
+    <view class="checkin-hero__copy">
+      <text class="checkin-hero__eyebrow">自律让你更好</text>
+      <text class="checkin-hero__title">记录这次运动</text>
+      <text class="checkin-hero__description">每一次坚持，都在靠近更好的自己</text>
+      <view class="checkin-hero__script"><text>更好的</text><text>自己</text></view>
+    </view>
+  </view>
+
+  <view class="checkin-sheet">
+    <view class="form-section">
+      <text class="form-section__title">选择运动类型</text>
+      <view class="sport-selector">
+        <button wx:for="{{sports}}" wx:key="key" class="sport-selector__item {{sport === item.key ? 'sport-selector__item--active' : ''}}" data-sport="{{item.key}}" bindtap="selectSport">
+          <text class="{{item.iconFont ? 'iconfont sport-selector__icon' : 'sport-selector__pilates-icon'}}">{{item.icon}}</text>
+          <text>{{item.label}}</text>
+        </button>
+      </view>
+    </view>
+
+    <view class="form-section form-section--duration">
+      <text class="form-section__title">运动时长</text>
+      <view class="duration-control">
+        <button class="duration-control__step" data-delta="-5" bindtap="adjustDuration" aria-label="减少五分钟">
+          <text class="duration-control__minus">−</text>
+        </button>
+        <view class="duration-control__value">
+          <text class="duration-control__number">{{duration}}</text>
+          <text class="duration-control__unit">分钟</text>
+          <input class="duration-control__input-hit" type="number" value="{{duration}}" data-field="duration" bindinput="handleInput" aria-label="运动时长" />
+        </view>
+        <button class="duration-control__step" data-delta="5" bindtap="adjustDuration" aria-label="增加五分钟">
+          <text class="iconfont duration-control__plus"></text>
+        </button>
+      </view>
+    </view>
+
+    <view wx:if="{{sport === 'run'}}" class="form-section form-section--compact">
+      <view class="run-field">
+        <text class="form-section__title">跑步距离</text>
+        <view class="run-field__input"><input type="digit" value="{{distance}}" data-field="distance" bindinput="handleInput" placeholder="例如 5.2" /><text>公里</text></view>
+      </view>
+    </view>
+
+    <view class="form-section proof-section">
+      <view class="form-section__heading"><text class="form-section__title">上传运动凭证</text><text>拍下你的运动瞬间吧</text></view>
+      <view class="proof-grid">
+        <button class="proof-grid__upload {{proofPath ? 'proof-grid__upload--filled' : ''}}" bindtap="chooseProof">
+          <image wx:if="{{proofPath}}" class="proof-grid__photo" src="{{proofPath}}" mode="aspectFill" />
+          <block wx:else><text class="iconfont proof-grid__upload-icon"></text><text>上传凭证</text></block>
+        </button>
+      </view>
+      <button wx:if="{{proofPath}}" class="proof-section__replace" bindtap="removeProof">删除并重新选择</button>
+    </view>
+
+    <view class="estimate-card">
+      <text class="iconfont estimate-card__icon"></text>
+      <text>预计消耗</text><text class="estimate-card__value">{{estimatedCalories}}</text><text>千卡</text>
+    </view>
+    <button class="checkin-page__submit" loading="{{submitting}}" bindtap="handleSubmit">完成打卡</button>
+  </view>
+
+  <view wx:if="{{result}}" class="result-mask">
+    <view class="result-modal">
+      <view class="result-modal__spark">✦</view>
+      <text class="result-modal__eyebrow">CHECK-IN COMPLETE</text>
+      <text class="result-modal__title">今天也算数</text>
+      <text class="result-modal__score">+{{result.checkIn.score}}<small> 分</small></text>
+      <text class="result-modal__detail">约 {{result.checkIn.calories}} 千卡 · 当前第 {{result.rank}} 名</text>
+      <view class="result-modal__breakdown">
+        <view><text>有效打卡</text><text>+{{result.checkIn.scoreBreakdown.base}}</text></view>
+        <view><text>运动时长</text><text>+{{result.checkIn.scoreBreakdown.duration}}</text></view>
+        <view><text>卡路里</text><text>+{{result.checkIn.scoreBreakdown.calories}}</text></view>
+      </view>
+      <button class="result-modal__button" bindtap="closeResult">回到运动局</button>
+    </view>
+  </view>
+
+  <bottom-tabbar active="sport" />
+</view>

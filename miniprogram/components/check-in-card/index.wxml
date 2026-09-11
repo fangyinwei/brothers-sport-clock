@@ -1,0 +1,11 @@
+<view class="check-in-card">
+  <image wx:if="{{image}}" class="check-in-card__image" src="{{image}}" mode="aspectFill" />
+  <view class="check-in-card__main">
+    <view class="check-in-card__title-row">
+      <text class="check-in-card__title">{{title}}</text>
+      <text class="check-in-card__score">+{{score}} 分</text>
+    </view>
+    <text class="check-in-card__detail">{{detail}}</text>
+    <text class="check-in-card__calories">约 {{calories}} 千卡</text>
+  </view>
+</view>
