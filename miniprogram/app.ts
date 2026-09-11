@@ -3,7 +3,7 @@ import { CLOUD_CONFIG, isCloudConfigured } from './config/cloud';
 App({
   globalData: {
     appName: 'BroFit',
-    apiMode: 'mock'
+    apiMode: 'cloud'
   },
   onLaunch() {
     wx.setStorageSync('brofit:launched', true);

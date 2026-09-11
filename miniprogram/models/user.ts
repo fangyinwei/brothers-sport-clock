@@ -17,6 +17,8 @@ export interface User {
   weight: number;
   experience: FitnessExperience;
   stats: UserStats;
+  /** Cloud API uses this transient client-only value to keep the source fileID after resolving a temp URL. */
+  avatarFileId?: string;
 }
 
 export interface Session {
@@ -24,6 +26,7 @@ export interface Session {
   user: User;
   groupId: string;
   profileCompleted: boolean;
+  uploadPrefix?: string;
 }
 
 export interface UpdateProfileInput {

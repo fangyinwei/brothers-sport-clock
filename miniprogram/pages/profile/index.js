@@ -74,7 +74,6 @@ Page({
                 (0, storage_1.removeStorage)(storage_1.STORAGE_KEYS.state);
                 (0, storage_1.removeStorage)(storage_1.STORAGE_KEYS.currentUser);
                 (0, storage_1.removeStorage)(storage_1.STORAGE_KEYS.profileCompleted);
-                wx.removeStorageSync('brofit:wx-login-code');
                 wx.removeStorageSync('brofit:active-tab');
                 wx.reLaunch({ url: '/pages/login/index' });
             }

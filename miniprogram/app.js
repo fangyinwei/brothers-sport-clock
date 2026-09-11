@@ -4,7 +4,7 @@ const cloud_1 = require("./config/cloud");
 App({
     globalData: {
         appName: 'BroFit',
-        apiMode: 'mock'
+        apiMode: 'cloud'
     },
     onLaunch() {
         wx.setStorageSync('brofit:launched', true);

@@ -6,6 +6,7 @@ Page({
     data: {
         nickname: '阿泽',
         avatar: FIGMA_AVATAR,
+        avatarFileId: '',
         height: '170',
         weight: '72',
         experience: 'regular',
@@ -20,6 +21,7 @@ Page({
             this.setData({
                 nickname: session.user.nickname,
                 avatar: session.user.avatar || FIGMA_AVATAR,
+                avatarFileId: session.user.avatarFileId || '',
                 height: String(session.user.height),
                 weight: String(session.user.weight),
                 experience: session.user.experience
@@ -37,7 +39,7 @@ Page({
             count: 1,
             mediaType: ['image'],
             sourceType: ['album', 'camera'],
-            success: (result) => this.setData({ avatar: result.tempFiles[0].tempFilePath })
+            success: (result) => this.setData({ avatar: result.tempFiles[0].tempFilePath, avatarFileId: '' })
         });
     },
     goBack() {
@@ -60,9 +62,10 @@ Page({
         }
         this.setData({ saving: true });
         try {
-            await (0, api_1.getApi)().updateProfile({ nickname, avatar: this.data.avatar, height, weight, experience: this.data.experience });
+            const avatar = this.data.avatarFileId || (this.data.avatar.startsWith('cloud://') ? this.data.avatar : undefined);
+            await (0, api_1.getApi)().updateProfile({ nickname, avatar, height, weight, experience: this.data.experience });
             wx.showToast({ title: '资料已保存', icon: 'success' });
-            setTimeout(() => this.goBack(), 600);
+            setTimeout(() => wx.reLaunch({ url: '/pages/home/index' }), 600);
         }
         catch (_error) {
             this.setData({ saving: false });

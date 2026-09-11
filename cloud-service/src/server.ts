@@ -1,4 +1,7 @@
-import app from './app';
+import { readDatabaseConfig } from './config';
+import { createPool, ping } from './db/pool';
+import { createApp } from './app';
+import { BrofitService } from './service';
 
 function resolvePort(value: string | undefined): number {
   const port = Number(value ?? '8080');
@@ -8,8 +11,24 @@ function resolvePort(value: string | undefined): number {
   return port;
 }
 
-const port = resolvePort(process.env.PORT);
+async function main(): Promise<void> {
+  const port = resolvePort(process.env.PORT);
+  const config = readDatabaseConfig();
+  const pool = createPool(config);
+  await ping(pool);
+  const app = createApp({ service: new BrofitService(pool), ping: () => ping(pool) });
+  const server = app.listen(port, '0.0.0.0', () => {
+    console.info(JSON.stringify({ event: 'service_started', port }));
+  });
+  const close = async () => {
+    await new Promise<void>((resolve) => server.close(() => resolve()));
+    await pool.end();
+  };
+  process.once('SIGTERM', close);
+  process.once('SIGINT', close);
+}
 
-app.listen(port, '0.0.0.0', () => {
-  console.info(JSON.stringify({ event: 'service_started', port }));
+main().catch((error) => {
+  console.error(JSON.stringify({ event: 'service_start_failed', error: error instanceof Error ? error.message : 'unknown' }));
+  process.exitCode = 1;
 });

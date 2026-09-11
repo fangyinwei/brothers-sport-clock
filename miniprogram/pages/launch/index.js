@@ -24,7 +24,8 @@ Page({
             return;
         this.setData({ leaving: true });
         setTimeout(() => {
-            wx.reLaunch({ url: hasProfile ? '/pages/home/index' : '/pages/login/index' });
+            const explicitMock = wx.getStorageSync('brofit:api-mode') === 'mock';
+            wx.reLaunch({ url: explicitMock && hasProfile ? '/pages/home/index' : '/pages/login/index' });
         }, 260);
     }
 });

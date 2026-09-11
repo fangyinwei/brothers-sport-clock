@@ -35,24 +35,18 @@ Page({
     }
     this.setData({ loading: true });
     try {
-      await new Promise<void>((resolve) => {
-        if (typeof wx.login !== 'function') {
-          resolve();
-          return;
-        }
-        wx.login({
-          success: (result: any) => {
-            if (result && result.code) wx.setStorageSync('brofit:wx-login-code', result.code);
-            resolve();
-          },
-          fail: () => resolve()
-        });
-      });
-      await getApi().getSession();
-      writeStorage(STORAGE_KEYS.profileCompleted, true);
-      wx.reLaunch({ url: '/pages/home/index' });
+      const session = await getApi().getSession();
+      writeStorage(STORAGE_KEYS.profileCompleted, session.profileCompleted);
+      wx.reLaunch({ url: session.profileCompleted ? '/pages/home/index' : '/pages/profile-setup/index' });
     } catch (_error) {
-      wx.showToast({ title: '登录失败，请重试', icon: 'none' });
+      const error = _error as { message?: string; statusCode?: number };
+      // 只输出状态和服务端公共错误文本，避免在开发日志中泄露身份或凭据。
+      console.warn('BroFit 登录请求失败', {
+        statusCode: error?.statusCode,
+        message: error?.message || 'unknown'
+      });
+      const title = error?.statusCode ? `登录失败（${error.statusCode}）` : '登录失败，请重试';
+      wx.showToast({ title, icon: 'none' });
       this.setData({ loading: false });
     }
   }

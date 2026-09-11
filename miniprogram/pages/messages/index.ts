@@ -75,9 +75,14 @@ Page({
     await getApi().sendNudge({ targetUserId, template: '一起继续加油！' });
     this.loadMessages();
   },
-  markAllRead() {
-    this.setData({ messages: this.data.messages.map((message: DisplayMessage) => ({ ...message, read: true })) });
-    wx.showToast({ title: '已全部标为已读', icon: 'none' });
+  async markAllRead() {
+    try {
+      await getApi().markAllMessagesRead();
+      this.setData({ messages: this.data.messages.map((message: DisplayMessage) => ({ ...message, read: true })) });
+      wx.showToast({ title: '已全部标为已读', icon: 'none' });
+    } catch (_error) {
+      wx.showToast({ title: '操作失败，请重试', icon: 'none' });
+    }
   },
   goCheckIn() {
     wx.navigateTo({ url: '/pages/check-in/index' });

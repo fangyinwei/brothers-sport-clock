@@ -22,6 +22,10 @@
       </view>
     </view>
 
+    <view class="messages-toolbar">
+      <button class="messages-toolbar__read" bindtap="markAllRead">全部标为已读</button>
+    </view>
+
     <loading-state wx:if="{{loading}}" />
     <empty-state wx:elif="{{messages.length === 0}}" title="暂时没有新消息" description="去运动一下，消息马上就来。" actionText="去打卡" bind:action="goCheckIn" />
     <view wx:else class="message-list">

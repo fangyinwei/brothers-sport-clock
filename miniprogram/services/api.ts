@@ -4,6 +4,7 @@ import { Message, SendNudgeInput } from '../models/notification';
 import { RankingData, RankingQuery } from '../models/ranking';
 import { Session, UpdateProfileInput, User } from '../models/user';
 import { createMockApi } from './mock-api';
+import { createCloudApi } from './cloud-api';
 
 export interface FitnessApi {
   getSession(): Promise<Session>;
@@ -12,12 +13,16 @@ export interface FitnessApi {
   createCheckIn(input: CheckInInput): Promise<CheckInResult>;
   getRankings(input: RankingQuery): Promise<RankingData>;
   getMessages(): Promise<Message[]>;
+  markAllMessagesRead(): Promise<{ updated: number }>;
   sendNudge(input: SendNudgeInput): Promise<void>;
 }
 
 let api: FitnessApi | null = null;
 
 export function getApi(): FitnessApi {
-  if (!api) api = createMockApi();
+  if (!api) {
+    const explicitMode = wx.getStorageSync('brofit:api-mode');
+    api = explicitMode === 'mock' ? createMockApi() : createCloudApi();
+  }
   return api;
 }

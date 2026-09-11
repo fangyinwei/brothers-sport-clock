@@ -6,6 +6,9 @@
 }
 
 .messages-page__content { padding: 22rpx 24rpx 34rpx; }
+.messages-toolbar { display: flex; justify-content: flex-end; margin: 22rpx 0 10rpx; }
+.messages-toolbar__read { margin: 0; padding: 0; color: #6b7280; background: transparent; font-size: 24rpx; line-height: 1.5; }
+.messages-toolbar__read::after { border: 0; }
 
 .streak-banner {
   position: relative;

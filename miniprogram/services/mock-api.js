@@ -223,6 +223,18 @@ function createMockApi() {
         async getMessages() {
             return getState().messages;
         },
+        async markAllMessagesRead() {
+            const state = getState();
+            let updated = 0;
+            state.messages = state.messages.map((message) => {
+                if (message.read)
+                    return message;
+                updated += 1;
+                return { ...message, read: true };
+            });
+            saveState(state);
+            return { updated };
+        },
         async sendNudge(input) {
             const state = getState();
             const sender = state.users.find((item) => item.id === state.currentUserId) || state.users[0];
