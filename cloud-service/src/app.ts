@@ -67,6 +67,11 @@ export function createApp(dependencies: AppDependencies = {}) {
     response.status(200).json(payload);
   }));
 
+  app.get('/api/v1/subscribe/config', authenticated(async (request, response) => {
+    openid(request);
+    response.status(200).json(requireService(dependencies.service).getSubscribeConfig());
+  }));
+
   app.get('/api/v1/home', authenticated(async (request, response) => {
     const id = openid(request);
     const groupId = String(request.query.groupId || '');
@@ -84,6 +89,12 @@ export function createApp(dependencies: AppDependencies = {}) {
     const id = openid(request);
     const payload = await requireService(dependencies.service).createCheckIn(id, asBody(request) as any);
     response.status(201).json(payload);
+  }));
+
+  app.post('/api/v1/check-ins/:checkInId/likes', authenticated(async (request, response) => {
+    const id = openid(request);
+    const payload = await requireService(dependencies.service).toggleCheckInLike(id, String(request.params.checkInId));
+    response.status(200).json(payload);
   }));
 
   app.get('/api/v1/rankings', authenticated(async (request, response) => {

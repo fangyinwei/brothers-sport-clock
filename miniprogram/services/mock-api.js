@@ -57,6 +57,7 @@ function defaultState() {
         currentUserId: 'u-001',
         users: seedUsers,
         checkIns: createSeedCheckIns(),
+        likesByCheckIn: {},
         messages: [
             { id: 'm-1', type: 'rank', title: '排名有变化', content: '老周刚刚超过你，差 18 分。', fromUserId: 'u-002', fromNickname: '老周', createdAt: new Date(Date.now() - 25 * 60000).toISOString(), read: false, actionLabel: '去看看' },
             { id: 'm-2', type: 'nudge', title: '阿泽提醒你', content: '今天还没打卡，别掉连胜。', fromUserId: 'u-001', fromNickname: '阿泽', createdAt: new Date(Date.now() - 2 * 3600000).toISOString(), read: false, actionLabel: '立即打卡' },
@@ -67,7 +68,7 @@ function defaultState() {
 function getState() {
     const saved = (0, storage_1.readStorage)(storage_1.STORAGE_KEYS.state, null);
     if (saved)
-        return saved;
+        return { ...saved, likesByCheckIn: saved.likesByCheckIn || {} };
     const initial = defaultState();
     (0, storage_1.writeStorage)(storage_1.STORAGE_KEYS.state, initial);
     return initial;
@@ -126,7 +127,19 @@ function buildActivities(state) {
         .map((item) => {
         const user = state.users.find((candidate) => candidate.id === item.userId) || state.users[0];
         const sportName = item.sport === 'gym' ? '健身' : item.sport === 'run' ? '跑步' : item.sport === 'pilates' ? '普拉提' : '篮球';
-        return { id: item.id, user, sport: item.sport, title: `${user.nickname} 完成了${sportName}打卡`, detail: `${(0, format_1.formatDuration)(item.duration)} · ${item.calories} 千卡`, score: item.score, createdAt: (0, format_1.formatRelativeTime)(item.createdAt), proofPath: item.proofPath };
+        const likes = state.likesByCheckIn[item.id] || [];
+        return {
+            id: item.id,
+            user,
+            sport: item.sport,
+            title: `${user.nickname} 完成了${sportName}打卡`,
+            detail: `${(0, format_1.formatDuration)(item.duration)} · ${item.calories} 千卡`,
+            score: item.score,
+            createdAt: (0, format_1.formatRelativeTime)(item.createdAt),
+            proofPath: item.proofPath,
+            likes: likes.length,
+            liked: likes.includes(state.currentUserId)
+        };
     });
 }
 function rankingData(state, type) {
@@ -217,11 +230,27 @@ function createMockApi() {
             saveState(state);
             return { checkIn, rank: user.stats.rank, rankDelta: user.stats.rank <= 2 ? 1 : 0 };
         },
+        async toggleCheckInLike(checkInId) {
+            const state = getState();
+            if (!state.checkIns.some((item) => item.id === checkInId && item.status === 'valid'))
+                throw new Error('打卡记录不存在');
+            const likes = state.likesByCheckIn[checkInId] || [];
+            const currentIndex = likes.indexOf(state.currentUserId);
+            const liked = currentIndex < 0;
+            state.likesByCheckIn[checkInId] = liked
+                ? [...likes, state.currentUserId]
+                : likes.filter((id) => id !== state.currentUserId);
+            saveState(state);
+            return { liked, likes: state.likesByCheckIn[checkInId].length };
+        },
         async getRankings(input) {
             return rankingData(getState(), input.type);
         },
         async getMessages() {
             return getState().messages;
+        },
+        async getSubscribeConfig() {
+            return { enabled: false };
         },
         async markAllMessagesRead() {
             const state = getState();

@@ -25,8 +25,9 @@ Page({
                 (0, api_1.getApi)().getMessages(),
                 (0, api_1.getApi)().getHomeData('group-brofit')
             ]);
+            const memberAvatars = new Map(home.group.members.map((member) => [member.id, member.avatar]));
             this.setData({
-                messages: messages.map((message) => this.toDisplayMessage(message)),
+                messages: messages.map((message) => this.toDisplayMessage(message, memberAvatars)),
                 currentUserId: home.session.id,
                 streakDays: home.stats.streakDays,
                 loading: false
@@ -37,13 +38,10 @@ Page({
             wx.showToast({ title: '消息加载失败', icon: 'none' });
         }
     },
-    toDisplayMessage(message) {
-        const visual = message.type === 'rank' ? 'rank' : message.type === 'challenge' ? 'challenge' : 'invite';
-        const avatar = visual === 'rank'
-            ? '/assets/images/figma-messages-avatar-rank.png'
-            : visual === 'challenge'
-                ? '/assets/images/figma-messages-avatar-challenge.png'
-                : '/assets/images/figma-messages-avatar-invite.png';
+    toDisplayMessage(message, memberAvatars) {
+        const visual = message.fromUserId ? 'sender' : 'system';
+        const avatar = (message.fromUserId ? memberAvatars.get(message.fromUserId) : '')
+            || '/assets/images/figma-messages-avatar-challenge.png';
         return { ...message, visual, avatar, timeLabel: (0, format_1.formatRelativeTime)(message.createdAt) };
     },
     async sendQuickNudge(event) {

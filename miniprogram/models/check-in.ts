@@ -34,3 +34,8 @@ export interface CheckInResult {
   rank: number;
   rankDelta: number;
 }
+
+export interface CheckInLikeResult {
+  liked: boolean;
+  likes: number;
+}

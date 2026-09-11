@@ -1,6 +1,6 @@
 import { HomeData } from '../models/group';
-import { CheckInInput, CheckInResult } from '../models/check-in';
-import { Message, SendNudgeInput } from '../models/notification';
+import { CheckInInput, CheckInLikeResult, CheckInResult } from '../models/check-in';
+import { Message, SendNudgeInput, SubscribeConfig } from '../models/notification';
 import { RankingData, RankingQuery } from '../models/ranking';
 import { Session, UpdateProfileInput, User } from '../models/user';
 import { createMockApi } from './mock-api';
@@ -11,8 +11,10 @@ export interface FitnessApi {
   getHomeData(groupId: string): Promise<HomeData>;
   updateProfile(input: UpdateProfileInput): Promise<User>;
   createCheckIn(input: CheckInInput): Promise<CheckInResult>;
+  toggleCheckInLike(checkInId: string): Promise<CheckInLikeResult>;
   getRankings(input: RankingQuery): Promise<RankingData>;
   getMessages(): Promise<Message[]>;
+  getSubscribeConfig(): Promise<SubscribeConfig>;
   markAllMessagesRead(): Promise<{ updated: number }>;
   sendNudge(input: SendNudgeInput): Promise<void>;
 }

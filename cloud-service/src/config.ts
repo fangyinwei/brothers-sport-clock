@@ -7,6 +7,14 @@ export interface DatabaseConfig {
   connectionLimit: number;
 }
 
+export interface WechatSubscribeConfig {
+  appId: string;
+  appSecret: string;
+  templateId: string;
+  page: string;
+  data: Record<string, string>;
+}
+
 function required(name: string, value: string | undefined): string {
   const normalized = value?.trim();
   if (!normalized) throw new Error(`${name} is required`);
@@ -33,5 +41,32 @@ export function readDatabaseConfig(env: NodeJS.ProcessEnv = process.env, options
     user,
     password: required('DB_PASSWORD', env.DB_PASSWORD),
     connectionLimit: integer('DB_CONNECTION_LIMIT', env.DB_CONNECTION_LIMIT, 10)
+  };
+}
+
+/**
+ * Subscribe messaging is optional. All four credentials must be supplied to
+ * enable it; keeping them absent leaves the service in in-app-message-only mode.
+ */
+export function readWechatSubscribeConfig(env: NodeJS.ProcessEnv = process.env): WechatSubscribeConfig | undefined {
+  const values = [env.WECHAT_APP_ID, env.WECHAT_APP_SECRET, env.WECHAT_SUBSCRIBE_TEMPLATE_ID, env.WECHAT_SUBSCRIBE_TEMPLATE_DATA];
+  if (values.every((value) => !value?.trim())) return undefined;
+
+  const rawData = required('WECHAT_SUBSCRIBE_TEMPLATE_DATA', env.WECHAT_SUBSCRIBE_TEMPLATE_DATA);
+  let data: unknown;
+  try {
+    data = JSON.parse(rawData);
+  } catch (_error) {
+    throw new Error('WECHAT_SUBSCRIBE_TEMPLATE_DATA must be valid JSON');
+  }
+  if (!data || typeof data !== 'object' || Array.isArray(data) || !Object.values(data).every((value) => typeof value === 'string')) {
+    throw new Error('WECHAT_SUBSCRIBE_TEMPLATE_DATA must be a JSON object of string values');
+  }
+  return {
+    appId: required('WECHAT_APP_ID', env.WECHAT_APP_ID),
+    appSecret: required('WECHAT_APP_SECRET', env.WECHAT_APP_SECRET),
+    templateId: required('WECHAT_SUBSCRIBE_TEMPLATE_ID', env.WECHAT_SUBSCRIBE_TEMPLATE_ID),
+    page: env.WECHAT_SUBSCRIBE_PAGE?.trim() || 'pages/messages/index',
+    data: data as Record<string, string>
   };
 }

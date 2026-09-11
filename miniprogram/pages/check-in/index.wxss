@@ -113,4 +113,18 @@
 .result-modal__breakdown view + view { border-left: 1rpx solid #e7ebf3; }
 .result-modal__breakdown text { display: block; font-size: 21rpx; }
 .result-modal__breakdown text:last-child { margin-top: 8rpx; color: #425927; font-size: 28rpx; font-weight: 600; }
-.result-modal__button { width: 100%; height: 86rpx; border-radius: 43rpx; color: #293716; background: #cafa63; font-size: 28rpx; font-weight: 600; }
+.result-modal__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 86rpx;
+  padding: 0;
+  line-height: 1;
+  text-align: center;
+  border-radius: 43rpx;
+  color: #293716;
+  background: #cafa63;
+  font-size: 28rpx;
+  font-weight: 600;
+}

@@ -22,7 +22,7 @@
       </view>
       <view class="profile-card profile-history">
         <view class="profile-section-head"><text class="profile-section-title">历史打卡</text><text class="profile-section-link">查看全部 <text class="profile-chevron">›</text></text></view>
-        <view wx:for="{{recentCheckins}}" wx:key="id" class="profile-history__item" bindtap="goCheckIn"><image class="profile-history__image" src="{{item.image}}" mode="aspectFill" /><view class="profile-history__copy"><text class="profile-history__title">{{item.title}}</text><text class="profile-history__detail">{{item.detail}}</text></view><text class="profile-history__date">{{item.date}}</text><text class="profile-history__chevron">›</text></view>
+        <view wx:for="{{recentCheckins}}" wx:key="id" class="profile-history__item" data-image="{{item.image}}" bindtap="previewCheckInProof"><image class="profile-history__image" src="{{item.image}}" mode="aspectFill" /><view class="profile-history__copy"><text class="profile-history__title">{{item.title}}</text><text class="profile-history__detail">{{item.detail}}</text></view><text class="profile-history__date">{{item.date}}</text><text class="profile-history__chevron">›</text></view>
       </view>
     </view>
   </block>

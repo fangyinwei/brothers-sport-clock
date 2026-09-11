@@ -1,7 +1,7 @@
 import type { FitnessApi } from './api';
 import { HomeData } from '../models/group';
-import { CheckInInput, CheckInResult } from '../models/check-in';
-import { Message, SendNudgeInput } from '../models/notification';
+import { CheckInInput, CheckInLikeResult, CheckInResult } from '../models/check-in';
+import { Message, SendNudgeInput, SubscribeConfig } from '../models/notification';
 import { RankingData, RankingQuery } from '../models/ranking';
 import { Session, UpdateProfileInput, User } from '../models/user';
 import { CLOUD_CONFIG, isCloudConfigured } from '../config/cloud';
@@ -150,12 +150,14 @@ export function createCloudApi(): FitnessApi {
       const urls = await getTempFileUrls([result.checkIn.proofPath]);
       return { ...result, checkIn: { ...result.checkIn, proofPath: urls.get(result.checkIn.proofPath) || '' } };
     },
+    toggleCheckInLike: (checkInId: string) => request<CheckInLikeResult>(`/api/v1/check-ins/${encodeURIComponent(checkInId)}/likes`, { method: 'POST', data: {} }),
     async getRankings(input: RankingQuery): Promise<RankingData> {
       const ranking = await request<RankingData>(withQuery('/api/v1/rankings', { groupId: input.groupId, type: input.type }));
       const urls = await getTempFileUrls(ranking.entries.map((entry) => entry.user.avatar));
       return { ...ranking, entries: await Promise.all(ranking.entries.map(async (entry) => ({ ...entry, user: await resolveUser(entry.user, urls) }))) };
     },
     getMessages: () => request<Message[]>('/api/v1/messages'),
+    getSubscribeConfig: () => request<SubscribeConfig>('/api/v1/subscribe/config'),
     markAllMessagesRead: () => request<{ updated: number }>('/api/v1/messages/read', { method: 'PATCH', data: {} }),
     sendNudge: (input: SendNudgeInput) => request<void>('/api/v1/nudges', { method: 'POST', data: input })
   };

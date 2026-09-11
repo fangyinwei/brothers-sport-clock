@@ -39,6 +39,8 @@ export interface Activity {
   score: number;
   createdAt: string;
   proofPath?: string;
+  likes: number;
+  liked: boolean;
 }
 
 export interface HomeData {

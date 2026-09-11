@@ -1,10 +1,12 @@
+import { hasValidLoginCache, readStorage, STORAGE_KEYS } from '../../utils/storage';
+
 Page({
   data: {
     leaving: false,
     countdown: 3
   },
   onReady() {
-    const hasProfile = wx.getStorageSync('brofit:profile-completed');
+    const hasProfile = readStorage(STORAGE_KEYS.profileCompleted, false);
     const timer = setInterval(() => {
       const next = this.data.countdown - 1;
       if (next <= 0) clearInterval(timer);
@@ -15,7 +17,7 @@ Page({
     }, 1800);
   },
   skip() {
-    const hasProfile = wx.getStorageSync('brofit:profile-completed');
+    const hasProfile = readStorage(STORAGE_KEYS.profileCompleted, false);
     this.leave(hasProfile);
   },
   leave(hasProfile: boolean) {
@@ -23,7 +25,9 @@ Page({
     this.setData({ leaving: true });
     setTimeout(() => {
       const explicitMock = wx.getStorageSync('brofit:api-mode') === 'mock';
-      wx.reLaunch({ url: explicitMock && hasProfile ? '/pages/home/index' : '/pages/login/index' });
+      const hasLogin = explicitMock ? hasProfile : hasValidLoginCache();
+      const url = hasLogin ? (hasProfile ? '/pages/home/index' : '/pages/profile-setup/index') : '/pages/login/index';
+      wx.reLaunch({ url });
     }, 260);
   }
 });

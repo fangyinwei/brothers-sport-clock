@@ -16,3 +16,8 @@ export interface SendNudgeInput {
   targetUserId: string;
   template: string;
 }
+
+export interface SubscribeConfig {
+  enabled: boolean;
+  templateId?: string;
+}

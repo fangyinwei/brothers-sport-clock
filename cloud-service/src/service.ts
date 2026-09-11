@@ -17,14 +17,17 @@ import {
   ApiCheckIn,
   ApiUser,
   CheckInInput,
+  CheckInLikeResult,
   GroupResponse,
   HomeResponse,
   MessageResponse,
   ProfileInput,
   RankingResponse,
   SessionResponse,
+  SubscribeConfigResponse,
   UserStats
 } from './types';
+import { SubscribeNotifier } from './wechat-subscribe';
 
 const GROUP_ID = 'group-brofit';
 const GROUP_NAME = '兄弟运动局';
@@ -67,6 +70,8 @@ interface CheckInRow {
   height_cm?: number | string | null;
   weight_kg?: number | string | null;
   experience?: FitnessExperience | null;
+  like_count?: number | string;
+  liked_by_current?: number | string;
 }
 
 interface WeeklyStats {
@@ -211,7 +216,12 @@ function profileRowFromMember(row: MemberRow): UserRow {
 }
 
 export class BrofitService {
-  constructor(private readonly pool: SqlPool, private readonly now: () => Date = () => new Date()) {}
+  constructor(
+    private readonly pool: SqlPool,
+    private readonly now: () => Date = () => new Date(),
+    private readonly subscribeNotifier?: SubscribeNotifier,
+    private readonly subscribeTemplateId?: string
+  ) {}
 
   private async currentUser(openid: string, executor: SqlExecutor = this.pool): Promise<UserRow> {
     const [rows] = await executor.query<UserRow[]>('SELECT id, nickname, avatar_file_id, height_cm, weight_kg, experience FROM users WHERE openid = ? LIMIT 1', [openid]);
@@ -294,6 +304,10 @@ export class BrofitService {
     };
   }
 
+  getSubscribeConfig(): SubscribeConfigResponse {
+    return this.subscribeTemplateId ? { enabled: true, templateId: this.subscribeTemplateId } : { enabled: false };
+  }
+
   async updateProfile(openid: string, input: ProfileInput): Promise<ApiUser> {
     const user = await this.currentUser(openid);
     const valid = validateProfile(input);
@@ -367,6 +381,46 @@ export class BrofitService {
     return { checkIn, rank: afterStats.rank, rankDelta: rankBefore - afterStats.rank };
   }
 
+  async toggleCheckInLike(openid: string, checkInId: string): Promise<CheckInLikeResult> {
+    const user = await this.currentUser(openid);
+    const id = assertString(checkInId, 'checkInId', 64, true)!;
+    const [available] = await this.pool.query<Array<{ id: string }>>(
+      `SELECT c.id
+       FROM check_ins c
+       JOIN group_members gm ON gm.group_id = c.group_id AND gm.user_id = ?
+       WHERE c.id = ? AND c.group_id = ? AND c.status = 'valid'
+       LIMIT 1`,
+      [user.id, id, GROUP_ID]
+    );
+    if (!available[0]) throw notFound('打卡记录不存在');
+
+    const connection = await this.pool.getConnection();
+    try {
+      await connection.beginTransaction();
+      const [existing] = await connection.query<Array<{ check_in_id: string }>>(
+        'SELECT check_in_id FROM check_in_likes WHERE check_in_id = ? AND user_id = ? FOR UPDATE',
+        [id, user.id]
+      );
+      const liked = !existing[0];
+      if (liked) {
+        await connection.query('INSERT INTO check_in_likes (check_in_id, user_id) VALUES (?, ?)', [id, user.id]);
+      } else {
+        await connection.query('DELETE FROM check_in_likes WHERE check_in_id = ? AND user_id = ?', [id, user.id]);
+      }
+      const [counts] = await connection.query<Array<{ likes: number | string }>>(
+        'SELECT COUNT(*) AS likes FROM check_in_likes WHERE check_in_id = ?',
+        [id]
+      );
+      await connection.commit();
+      return { liked, likes: numberValue(counts[0]?.likes) };
+    } catch (error) {
+      await connection.rollback();
+      throw error;
+    } finally {
+      connection.release();
+    }
+  }
+
   private async homeDataFor(user: UserRow): Promise<HomeResponse> {
     const group = await this.group();
     const memberRows = await this.members();
@@ -376,11 +430,13 @@ export class BrofitService {
     const [activityRows] = await this.pool.query<CheckInRow[]>(
       `SELECT c.id, c.user_id, c.group_id, c.sport, c.duration_minutes, c.distance_km, c.training_type, c.body_part,
               c.note, c.proof_file_id, c.calories, c.score_base, c.score_duration, c.score_calories, c.score_streak,
-              c.score_total, c.status, c.created_at, u.nickname, u.avatar_file_id, u.height_cm, u.weight_kg, u.experience
+              c.score_total, c.status, c.created_at, u.nickname, u.avatar_file_id, u.height_cm, u.weight_kg, u.experience,
+              (SELECT COUNT(*) FROM check_in_likes l WHERE l.check_in_id = c.id) AS like_count,
+              EXISTS(SELECT 1 FROM check_in_likes l WHERE l.check_in_id = c.id AND l.user_id = ?) AS liked_by_current
        FROM check_ins c JOIN users u ON u.id = c.user_id
        WHERE c.group_id = ? AND c.status = 'valid'
        ORDER BY c.created_at DESC LIMIT 5`,
-      [GROUP_ID]
+      [user.id, GROUP_ID]
     );
     const { rows: calendarRows } = weekly;
     const ownDates = new Set(calendarRows.filter((row) => row.user_id === user.id).map((row) => dateKeyShanghai(row.created_at)));
@@ -413,7 +469,9 @@ export class BrofitService {
         detail: `${row.duration_minutes < 60 ? `${row.duration_minutes}分钟` : `${Math.floor(row.duration_minutes / 60)}小时${row.duration_minutes % 60 ? `${row.duration_minutes % 60}分钟` : ''}`} · ${row.calories} 千卡`,
         score: row.score_total,
         createdAt: relativeTime(row.created_at, this.now()),
-        proofPath: row.proof_file_id
+        proofPath: row.proof_file_id,
+        likes: numberValue(row.like_count),
+        liked: Boolean(numberValue(row.liked_by_current))
       };
     });
     const currentCalories = weekly.rows.reduce((sum, row) => sum + numberValue(row.calories), 0);
@@ -427,7 +485,7 @@ export class BrofitService {
       challenge: {
         id: 'challenge-001',
         title: '本周全组燃脂挑战',
-        description: '全组累计消耗 5000 千卡，完成后解锁“燃动小队”称号。',
+        description: `全组累计消耗 ${numberValue(group.weekly_goal_calories)} 千卡，完成后解锁“燃动小队”称号。`,
         target: numberValue(group.weekly_goal_calories),
         current: currentCalories,
         unit: '千卡',
@@ -516,8 +574,8 @@ export class BrofitService {
     const sender = await this.currentUser(openid);
     const content = assertString(template, 'template', 200, true)!;
     if (!targetUserId || typeof targetUserId !== 'string') throw invalid('targetUserId格式无效');
-    const [rows] = await this.pool.query<Array<{ id: string; nickname: string | null }>>(
-      `SELECT u.id, u.nickname FROM group_members gm JOIN users u ON u.id = gm.user_id WHERE gm.group_id = ? AND u.id = ? LIMIT 1`,
+    const [rows] = await this.pool.query<Array<{ id: string; nickname: string | null; openid: string }>>(
+      `SELECT u.id, u.nickname, u.openid FROM group_members gm JOIN users u ON u.id = gm.user_id WHERE gm.group_id = ? AND u.id = ? LIMIT 1`,
       [GROUP_ID, targetUserId]
     );
     const target = rows[0];
@@ -527,5 +585,17 @@ export class BrofitService {
       `INSERT INTO messages (id, recipient_user_id, sender_user_id, type, title, content, action_label) VALUES (?, ?, ?, 'nudge', ?, ?, '去打卡')`,
       [randomUUID(), target.id, sender.id, `${sender.nickname || '兄弟'} 提醒你`, content]
     );
+    if (this.subscribeNotifier) {
+      try {
+        await this.subscribeNotifier.send(target.openid, {
+          sender: sender.nickname || '兄弟',
+          message: content,
+          date: dateKeyShanghai(this.now())
+        });
+      } catch (_error) {
+        // The in-app message has already been persisted. Do not expose recipient identity or provider errors in logs.
+        console.warn(JSON.stringify({ event: 'wechat_subscribe_delivery_failed' }));
+      }
+    }
   }
 }

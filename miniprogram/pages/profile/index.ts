@@ -17,6 +17,14 @@ const HISTORY_IMAGES = {
   pilates: '/assets/images/figma-profile-history-yoga.png'
 };
 
+interface RecentCheckIn {
+  id: string;
+  title: string;
+  detail: string;
+  date: string;
+  image: string;
+}
+
 Page({
   data: {
     loading: true,
@@ -29,7 +37,7 @@ Page({
       { image: '/assets/images/figma-profile-badge-peak.png', title: '登峰向上', description: '累计运动50次' }
     ],
     weekStats: [],
-    recentCheckins: []
+    recentCheckins: [] as RecentCheckIn[]
   },
   onShow() {
     this.loadProfile();
@@ -46,13 +54,14 @@ Page({
       { icon: STAT_ICONS.streak, value: home.stats.streakDays, label: '连续打卡' }
     ];
     const recentCheckins = home.activities
+      .filter((activity) => activity.user.id === session.user.id)
       .slice(0, 3)
       .map((activity) => ({
         id: activity.id,
         title: activity.sport === 'run' ? '户外跑步' : activity.sport === 'gym' ? '力量训练' : activity.sport === 'pilates' ? '普拉提' : '篮球运动',
         detail: activity.detail.replace(' · ', '  '),
         date: activity.createdAt,
-        image: HISTORY_IMAGES[activity.sport]
+        image: activity.proofPath || HISTORY_IMAGES[activity.sport]
       }));
     this.setData({ session, home, weekStats, recentCheckins, loading: false });
   },
@@ -61,6 +70,12 @@ Page({
   },
   goCheckIn() {
     wx.navigateTo({ url: '/pages/check-in/index' });
+  },
+  previewCheckInProof(event: { currentTarget: { dataset: { image?: string } } }) {
+    const image = event.currentTarget.dataset.image as string | undefined;
+    if (!image) return;
+    const urls = (this.data.recentCheckins as RecentCheckIn[]).map((item) => item.image).filter(Boolean);
+    wx.previewImage({ current: image, urls });
   },
   showDetails() {
     wx.navigateTo({ url: '/pages/ranking/index' });
@@ -76,6 +91,7 @@ Page({
         removeStorage(STORAGE_KEYS.state);
         removeStorage(STORAGE_KEYS.currentUser);
         removeStorage(STORAGE_KEYS.profileCompleted);
+        removeStorage(STORAGE_KEYS.loginExpiresAt);
         wx.removeStorageSync('brofit:active-tab');
         wx.reLaunch({ url: '/pages/login/index' });
       }

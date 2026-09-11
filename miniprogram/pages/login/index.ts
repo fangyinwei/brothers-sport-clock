@@ -1,6 +1,7 @@
 import { getApi } from '../../services/api';
 import { healthCheck } from '../../services/cloud-api';
-import { STORAGE_KEYS, writeStorage } from '../../utils/storage';
+import { SubscribeConfig } from '../../models/notification';
+import { cacheLoginForOneWeek, STORAGE_KEYS, writeStorage } from '../../utils/storage';
 
 type CloudStatus = 'checking' | 'connected' | 'unavailable';
 
@@ -27,6 +28,16 @@ Page({
   toggleAgreement() {
     this.setData({ agreed: !this.data.agreed });
   },
+  async requestWechatReminder(config: SubscribeConfig): Promise<void> {
+    if (!config.enabled || !config.templateId || typeof wx.requestSubscribeMessage !== 'function') return;
+    try {
+      await new Promise<Record<string, string>>((resolve, reject) => {
+        wx.requestSubscribeMessage({ tmplIds: [config.templateId!], success: resolve, fail: reject });
+      });
+    } catch (_error) {
+      // 用户拒绝、当前版本不支持或平台暂不可用时，均不影响登录主流程。
+    }
+  },
   async handleLogin() {
     if (this.data.loading) return;
     if (!this.data.agreed) {
@@ -35,8 +46,11 @@ Page({
     }
     this.setData({ loading: true });
     try {
-      const session = await getApi().getSession();
+      const api = getApi();
+      const [session, subscribeConfig] = await Promise.all([api.getSession(), api.getSubscribeConfig()]);
+      await this.requestWechatReminder(subscribeConfig);
       writeStorage(STORAGE_KEYS.profileCompleted, session.profileCompleted);
+      cacheLoginForOneWeek();
       wx.reLaunch({ url: session.profileCompleted ? '/pages/home/index' : '/pages/profile-setup/index' });
     } catch (_error) {
       const error = _error as { message?: string; statusCode?: number };

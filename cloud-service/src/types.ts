@@ -27,6 +27,11 @@ export interface SessionResponse {
   uploadPrefix: string;
 }
 
+export interface SubscribeConfigResponse {
+  enabled: boolean;
+  templateId?: string;
+}
+
 export interface ProfileInput {
   nickname: string;
   avatar?: string;
@@ -54,6 +59,11 @@ export interface ApiCheckIn extends CheckInInput {
   score: number;
   scoreBreakdown: ScoreBreakdown;
   status: 'valid' | 'questioned' | 'voided';
+}
+
+export interface CheckInLikeResult {
+  liked: boolean;
+  likes: number;
 }
 
 export interface GroupResponse {
@@ -88,6 +98,8 @@ export interface HomeResponse {
     score: number;
     createdAt: string;
     proofPath?: string;
+    likes: number;
+    liked: boolean;
   }>;
   stats: UserStats;
 }

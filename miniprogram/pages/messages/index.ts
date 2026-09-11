@@ -2,7 +2,7 @@ import { Message } from '../../models/notification';
 import { getApi } from '../../services/api';
 import { formatRelativeTime } from '../../utils/format';
 
-type MessageVisual = 'rank' | 'challenge' | 'invite';
+type MessageVisual = 'sender' | 'system';
 
 interface DisplayMessage extends Message {
   visual: MessageVisual;
@@ -33,8 +33,9 @@ Page({
         getApi().getMessages(),
         getApi().getHomeData('group-brofit')
       ]);
+      const memberAvatars = new Map(home.group.members.map((member) => [member.id, member.avatar]));
       this.setData({
-        messages: messages.map((message) => this.toDisplayMessage(message)),
+        messages: messages.map((message) => this.toDisplayMessage(message, memberAvatars)),
         currentUserId: home.session.id,
         streakDays: home.stats.streakDays,
         loading: false
@@ -44,13 +45,10 @@ Page({
       wx.showToast({ title: '消息加载失败', icon: 'none' });
     }
   },
-  toDisplayMessage(message: Message): DisplayMessage {
-    const visual: MessageVisual = message.type === 'rank' ? 'rank' : message.type === 'challenge' ? 'challenge' : 'invite';
-    const avatar = visual === 'rank'
-      ? '/assets/images/figma-messages-avatar-rank.png'
-      : visual === 'challenge'
-        ? '/assets/images/figma-messages-avatar-challenge.png'
-        : '/assets/images/figma-messages-avatar-invite.png';
+  toDisplayMessage(message: Message, memberAvatars: Map<string, string>): DisplayMessage {
+    const visual: MessageVisual = message.fromUserId ? 'sender' : 'system';
+    const avatar = (message.fromUserId ? memberAvatars.get(message.fromUserId) : '')
+      || '/assets/images/figma-messages-avatar-challenge.png';
     return { ...message, visual, avatar, timeLabel: formatRelativeTime(message.createdAt) };
   },
   async sendQuickNudge(event: any) {

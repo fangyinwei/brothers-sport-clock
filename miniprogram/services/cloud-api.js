@@ -139,12 +139,14 @@ function createCloudApi() {
             const urls = await getTempFileUrls([result.checkIn.proofPath]);
             return { ...result, checkIn: { ...result.checkIn, proofPath: urls.get(result.checkIn.proofPath) || '' } };
         },
+        toggleCheckInLike: (checkInId) => request(`/api/v1/check-ins/${encodeURIComponent(checkInId)}/likes`, { method: 'POST', data: {} }),
         async getRankings(input) {
             const ranking = await request(withQuery('/api/v1/rankings', { groupId: input.groupId, type: input.type }));
             const urls = await getTempFileUrls(ranking.entries.map((entry) => entry.user.avatar));
             return { ...ranking, entries: await Promise.all(ranking.entries.map(async (entry) => ({ ...entry, user: await resolveUser(entry.user, urls) }))) };
         },
         getMessages: () => request('/api/v1/messages'),
+        getSubscribeConfig: () => request('/api/v1/subscribe/config'),
         markAllMessagesRead: () => request('/api/v1/messages/read', { method: 'PATCH', data: {} }),
         sendNudge: (input) => request('/api/v1/nudges', { method: 'POST', data: input })
     };

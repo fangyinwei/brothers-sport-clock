@@ -5,7 +5,7 @@ const calories_1 = require("../../utils/calories");
 const scoring_1 = require("../../utils/scoring");
 Page({
     data: {
-        sport: 'pilates',
+        sport: 'gym',
         duration: '45',
         distance: '',
         note: '',

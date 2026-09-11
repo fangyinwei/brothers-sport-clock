@@ -67,10 +67,10 @@
         <view class="group-card home-surface">
           <view class="home-section-head">
             <text class="home-section-head__title">小组挑战</text>
-            <view class="home-section-head__link"><text>4人同行 · 更有动力</text><text>›</text></view>
+            <view class="home-section-head__link"><text>{{home.group.members.length}}人同行 · 更有动力</text><text>›</text></view>
           </view>
           <view class="member-list">
-            <view wx:for="{{showcaseMembers}}" wx:key="nickname" class="member-list__item">
+            <view wx:for="{{groupMembers}}" wx:key="id" class="member-list__item">
               <view class="member-list__avatar-wrap">
                 <image class="member-list__avatar" src="{{item.avatar}}" mode="aspectFill" />
                 <text wx:if="{{item.leader}}" class="member-list__leader">♛</text>
@@ -78,6 +78,12 @@
               <text>{{item.nickname}}</text>
               <text>{{item.streak}}天</text>
             </view>
+          </view>
+          <view class="group-challenge">
+            <view class="group-challenge__head"><text>{{home.group.challenge.title}}</text><text>{{challengeProgress}}%</text></view>
+            <text class="group-challenge__value">已完成 {{home.group.challenge.current}} / {{home.group.challenge.target}} {{home.group.challenge.unit}}</text>
+            <view class="group-challenge__track"><view class="group-challenge__progress" style="width: {{challengeProgress}}%;"></view></view>
+            <text class="group-challenge__remaining">{{challengeRemainingText}}</text>
           </view>
         </view>
 
@@ -92,8 +98,7 @@
               <view><text>{{item.user.nickname}}</text><text>完成了 {{item.sportLabel}}</text></view>
               <text>{{item.createdAt}}</text>
             </view>
-            <text class="feed-item__tag">{{item.encouragement}}</text>
-            <view class="feed-item__like"><text>♡</text><text>{{item.likes}}</text></view>
+            <button class="feed-item__like {{item.liked ? 'feed-item__like--liked' : ''}}" data-id="{{item.id}}" loading="{{likingActivityId === item.id}}" disabled="{{likingActivityId === item.id}}" bindtap="toggleLike" aria-label="{{item.liked ? '取消点赞' : '点赞'}}"><text>{{item.liked ? '♥' : '♡'}}</text><text>{{item.likes}}</text></button>
           </view>
           <empty-state wx:if="{{displayActivities.length === 0}}" title="还没有人打卡" description="完成第一次运动，给兄弟们打个样。" actionText="去打卡" bind:action="goCheckIn" />
         </view>

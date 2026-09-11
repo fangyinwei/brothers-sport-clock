@@ -27,6 +27,18 @@ Page({
     toggleAgreement() {
         this.setData({ agreed: !this.data.agreed });
     },
+    async requestWechatReminder(config) {
+        if (!config.enabled || !config.templateId || typeof wx.requestSubscribeMessage !== 'function')
+            return;
+        try {
+            await new Promise((resolve, reject) => {
+                wx.requestSubscribeMessage({ tmplIds: [config.templateId], success: resolve, fail: reject });
+            });
+        }
+        catch (_error) {
+            // 用户拒绝、当前版本不支持或平台暂不可用时，均不影响登录主流程。
+        }
+    },
     async handleLogin() {
         if (this.data.loading)
             return;
@@ -36,8 +48,11 @@ Page({
         }
         this.setData({ loading: true });
         try {
-            const session = await (0, api_1.getApi)().getSession();
+            const api = (0, api_1.getApi)();
+            const [session, subscribeConfig] = await Promise.all([api.getSession(), api.getSubscribeConfig()]);
+            await this.requestWechatReminder(subscribeConfig);
             (0, storage_1.writeStorage)(storage_1.STORAGE_KEYS.profileCompleted, session.profileCompleted);
+            (0, storage_1.cacheLoginForOneWeek)();
             wx.reLaunch({ url: session.profileCompleted ? '/pages/home/index' : '/pages/profile-setup/index' });
         }
         catch (_error) {

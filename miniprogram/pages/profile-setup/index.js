@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const api_1 = require("../../services/api");
+const storage_1 = require("../../utils/storage");
 const FIGMA_AVATAR = '/assets/images/figma-edit-profile-avatar.png';
 Page({
     data: {
@@ -62,8 +63,11 @@ Page({
         }
         this.setData({ saving: true });
         try {
-            const avatar = this.data.avatarFileId || (this.data.avatar.startsWith('cloud://') ? this.data.avatar : undefined);
+            // Keep the existing CloudBase fileID unless the user chose a new local image.
+            // A local path is uploaded by createCloudApi before the profile is saved.
+            const avatar = this.data.avatarFileId || (this.data.avatar !== FIGMA_AVATAR ? this.data.avatar : undefined);
             await (0, api_1.getApi)().updateProfile({ nickname, avatar, height, weight, experience: this.data.experience });
+            (0, storage_1.writeStorage)(storage_1.STORAGE_KEYS.profileCompleted, true);
             wx.showToast({ title: '资料已保存', icon: 'success' });
             setTimeout(() => wx.reLaunch({ url: '/pages/home/index' }), 600);
         }

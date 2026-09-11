@@ -5,7 +5,7 @@ import { calculateCheckInScore } from '../../utils/scoring';
 
 Page({
   data: {
-    sport: 'pilates' as SportType,
+    sport: 'gym' as SportType,
     duration: '45',
     distance: '',
     note: '',

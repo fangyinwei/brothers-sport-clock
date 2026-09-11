@@ -32,18 +32,12 @@
       <view wx:for="{{messages}}" wx:key="id" class="message-card {{item.read ? '' : 'message-card--unread'}}">
         <view class="message-card__avatar-wrap">
           <image class="message-card__avatar" src="{{item.avatar}}" mode="aspectFill" />
-          <text wx:if="{{item.visual === 'invite'}}" class="iconfont message-card__badge"></text>
         </view>
         <view class="message-card__copy">
           <view class="message-card__topline"><text class="message-card__title">{{item.title}}</text><text class="message-card__time">{{item.timeLabel}}</text></view>
           <text class="message-card__content">{{item.content}}</text>
-          <text wx:if="{{item.visual === 'rank'}}" class="message-card__quote">“别灰心，下次一定赢回来！”</text>
-          <text wx:elif="{{item.visual === 'challenge'}}" class="message-card__quote">“继续加油，本周目标近在眼前！”</text>
-          <text wx:else class="message-card__quote">“一个人可以跑很快，一起能跑更远！”</text>
         </view>
-        <view wx:if="{{item.visual === 'rank'}}" class="message-card__metric"><text class="iconfont message-card__metric-icon"></text><text>1名</text></view>
-        <view wx:elif="{{item.visual === 'challenge'}}" class="message-card__progress"><text>3/5</text><view class="message-card__progress-track"><view></view></view></view>
-        <view wx:else class="message-card__reply" data-user-id="{{item.fromUserId}}" bindtap="respondToMessage" role="button">回应一下</view>
+        <view wx:if="{{item.fromUserId}}" class="message-card__reply" data-user-id="{{item.fromUserId}}" bindtap="respondToMessage" role="button">回应一下</view>
       </view>
     </view>
   </view>
